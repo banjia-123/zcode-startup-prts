@@ -1,6 +1,6 @@
 {
   "name": "prts-boot",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "PRTS 终端风格的会话启动动画：新会话启动时全屏播放罗德岛 PRTS 开机序列，支持重播与配置",
   "author": {
     "name": "prts-boot contributors"
