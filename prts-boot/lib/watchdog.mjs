@@ -141,8 +141,15 @@ setInterval(() => {
   }
   if (winEdge) {
     if (coverBoot) {
-      // 托盘唤醒（进程常驻、只有窗口出现）或冷启动窗口就位：立即播 + 握手
-      tryPlay('window edge (coverBoot)', true)
+      // 稳定性复查：2s 后窗口仍在才算真启动（过滤 ZCode 退出流程的瞬时窗口重建）
+      // 冷启动场景由进程边沿立即播（此处复查后会被冷却自然挡住），此处主要服务托盘唤醒
+      setTimeout(() => {
+        if (!zcodeWindowVisibleCached()) {
+          log('window appeared then vanished within 2s (exit transient), skip')
+          return
+        }
+        tryPlay('window edge (coverBoot, stable)', true)
+      }, 2000)
     } else {
       // 0.3.x 兼容行为：窗口出现后延迟 2s 播（等窗口就位）
       setTimeout(() => {
