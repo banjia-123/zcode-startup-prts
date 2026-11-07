@@ -30,6 +30,16 @@ function main() {
     } catch {}
     return
   }
+  if (config.coverBoot === true) {
+    // 覆盖模式：ZCode 启动的播放由看门负责，新建会话不重复播（想看随时说「重播」）
+    log('coverBoot on, session-start play skipped (watchdog handles boot)')
+    try {
+      ensureWatchdogSetup(config.watchZcode !== false)
+    } catch (err) {
+      log('watchdog setup failed: ' + String(err && err.message))
+    }
+    return
+  }
   if (Date.now() - lastBootAt() < BOOT_COOLDOWN_MS) {
     log('cooldown (played recently), skip')
     return
