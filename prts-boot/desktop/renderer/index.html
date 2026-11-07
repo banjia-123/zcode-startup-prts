@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>PRTS BOOT</title>
+  <link rel="stylesheet" href="./splash.css" />
+</head>
+<body>
+  <div id="prts-root">
+    <!-- 幕②③④⑤主屏：PRTS 字标 / 身份档案 / 验证与揭幕（黑幕之下） -->
+    <div class="prts-screen" id="prts-screen">
+      <div class="prts-noise"></div>
+      <div class="prts-scan"></div>
+
+      <div class="prts-corner prts-c-tl">RHODES ISLAND</div>
+      <div class="prts-corner prts-c-tr">TERMINAL 01</div>
+      <div class="prts-corner prts-c-bl">RHODES ISLAND PHARMACEUTICALS</div>
+      <div class="prts-corner prts-c-br" id="prts-clock">00:00:00</div>
+
+      <!-- 幕②：PRTS 字标（参考同款排版：粗线/字标/细线/副标/ANALYSIS OS/PLEASE LOGIN） -->
+      <div class="prts-brand" id="prts-brand">
+        <div class="prts-rule prts-rule-a"></div>
+        <div class="prts-word" data-text="PRTS">PRTS</div>
+        <div class="prts-rule prts-rule-b"></div>
+        <div class="prts-syn">SYNTHESIZE&nbsp;INFORMATION</div>
+        <div class="prts-an">ANALYSIS&nbsp;OS</div>
+        <div class="prts-login-hint">PLEASE&nbsp;LOGIN</div>
+      </div>
+
+      <!-- 幕③：身份档案确认屏 -->
+      <div class="prts-account" id="prts-account">
+        <div class="prts-dossier">
+          <div class="prts-row"><span>身份</span><b id="prts-identity">Doctor</b></div>
+          <div class="prts-row"><span>编号</span><b id="prts-identity-id">0001</b></div>
+          <div class="prts-row"><span>权限等级</span><b id="prts-access">8</b></div>
+        </div>
+        <div class="prts-btn" id="prts-btn">
+          <span class="prts-btn-t">确认登录</span>
+          <span class="prts-btn-s">SIGN IN</span>
+        </div>
+        <div class="prts-hint">按 Enter 或点击按钮继续</div>
+        <div class="prts-skip" id="prts-skip">SKIP&nbsp;▸</div>
+      </div>
+
+      <!-- 幕④⑤：神经连接黑舞台（参考同款：金色线框球 + 侧线进度 + 底部状态 + GRANTED） -->
+      <div class="prts-stage" id="prts-stage">
+        <canvas id="prts-sphere"></canvas>
+        <div class="prts-line-mid" id="prts-line-mid"></div>
+        <div class="prts-card">
+          <div class="prts-card-org">RHODES&nbsp;ISLAND<br/>NEURAL&nbsp;LINK</div>
+          <div class="prts-card-id" id="prts-card-id">#0001</div>
+        </div>
+        <div class="prts-line prts-line-l">
+          <i class="prts-line-fill" id="prts-fill-l"></i>
+          <s class="prts-line-head" id="prts-head-l"></s>
+          <b id="prts-pct-l">0%</b>
+        </div>
+        <div class="prts-line prts-line-r">
+          <i class="prts-line-fill" id="prts-fill-r"></i>
+          <s class="prts-line-head" id="prts-head-r"></s>
+          <b id="prts-pct-r">0%</b>
+        </div>
+        <div class="prts-final" id="prts-final">
+          <div class="prts-big">ACCESS&nbsp;GRANTED</div>
+          <div class="prts-welcome" id="prts-welcome"><span id="prts-welcome-prefix">Welcome back, </span><span class="prts-welcome-name" id="prts-welcome-name">Doctor</span></div>
+        </div>
+        <div class="prts-status" id="prts-status"></div>
+      </div>
+      <div class="prts-hex" id="prts-hex"></div>
+    </div>
+
+    <!-- 幕①：黑幕 + ZCode 用户登录界面（整体随黑幕淡出，登录被 PRTS 入侵打断） -->
+    <div class="prts-black" id="prts-black">
+      <div class="prts-boot">
+        <div class="prts-emblem">
+          <!-- ZCode 徽记（原创）：方括号外框 + 几何 Z -->
+          <svg viewBox="0 0 120 120" aria-label="zcode emblem">
+            <path d="M30 6 H6 V114 H30"
+                  fill="none" stroke="#e8ecec" stroke-width="2"/>
+            <path d="M90 6 H114 V114 H90"
+                  fill="none" stroke="#e8ecec" stroke-width="2"/>
+            <path d="M38 34 H82 L38 86 H82"
+                  fill="none" stroke="#e8ecec" stroke-width="7"/>
+            <path d="M60 6 V14 M60 106 V114"
+                  stroke="#e8ecec" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="prts-bootlabel">ZCODE&nbsp;//&nbsp;USER&nbsp;LOGIN<span class="prts-caret"></span></div>
+        <div class="prts-boot-login">
+          <div class="prts-boot-row"><span>身份</span><b id="prts-boot-identity">Doctor</b></div>
+          <div class="prts-boot-row"><span>编号</span><b id="prts-boot-id">0001</b></div>
+          <div class="prts-boot-row"><span>权限等级</span><b id="prts-boot-access">8</b></div>
+        </div>
+        <div class="prts-boot-status" id="prts-boot-status">正在验证身份…</div>
+      </div>
+    </div>
+
+    <!-- 乱码撕裂层：转场洗白褪去时随底色显现（揭幕复用） -->
+    <div class="prts-tear" id="prts-tear"></div>
+
+    <!-- 过曝洗白 / 揭幕闪白 -->
+    <div class="prts-wash" id="prts-wash"></div>
+    <div class="prts-flash" id="prts-flash"></div>
+  </div>
+
+  <script src="./splash.js"></script>
+</body>
+</html>

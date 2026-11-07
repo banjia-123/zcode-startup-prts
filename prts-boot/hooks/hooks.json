@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "process",
+            "command": "node",
+            "args": ["${ZCODE_PLUGIN_ROOT}/lib/autostart.mjs"],
+            "timeoutMs": 10000
+          }
+        ]
+      }
+    ]
+  }
+}

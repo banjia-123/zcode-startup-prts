@@ -1,0 +1,18 @@
+{
+  "name": "dev-zcode-b70f7f1e",
+  "plugins": [
+    {
+      "name": "prts-boot",
+      "source": "./prts-boot",
+      "version": "0.5.4",
+      "description": "PRTS 终端风格的会话启动动画：新会话启动时全屏播放罗德岛 PRTS 开机序列，支持重播与配置",
+      "displayName": "PRTS Boot",
+      "displayName_i18n": {
+        "zh-CN": "PRTS 启动动画"
+      },
+      "description_i18n": {
+        "zh-CN": "会话启动时全屏播放明日方舟 PRTS 终端风格开机动画"
+      }
+    }
+  ]
+}
