@@ -48,3 +48,21 @@ export function writeConfig(patch) {
   fs.writeFileSync(configFile(), JSON.stringify(next, null, 2), 'utf8')
   return next
 }
+
+// ---------- ZCode 插件开关读取 ----------
+// ZCode 设置里的插件启停存在 ~/.zcode/cli/config.json 的 enabledPlugins。
+// 看门（独立进程）用它来决定冷启动是否播放——让插件开关统一管理所有触发面。
+const PLUGIN_ID = 'prts-boot@dev-zcode-b70f7f1e'
+
+export function isZcodePluginEnabled() {
+  try {
+    const f = path.join(zcodeHome(), 'cli', 'config.json')
+    const c = JSON.parse(fs.readFileSync(f, 'utf8'))
+    const enabled = c && c.plugins && c.plugins.enabledPlugins
+    if (!enabled || typeof enabled !== 'object') return true // 从未设置过 → 默认启用
+    const v = enabled[PLUGIN_ID]
+    return v === undefined ? true : v === true
+  } catch {
+    return true // 读失败宁播勿哑
+  }
+}

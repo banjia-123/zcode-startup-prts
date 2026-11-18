@@ -9,7 +9,7 @@
 import { execSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
-import { dataDir, readConfig } from './config.mjs'
+import { dataDir, isZcodePluginEnabled, readConfig } from './config.mjs'
 import { BOOT_COOLDOWN_MS, lastBootAt, spawnAnimation } from './boot-core.mjs'
 import { startupVbsPath } from './watchdog-setup.mjs'
 
@@ -73,6 +73,18 @@ function tryPlay(reason, handshake = false) {
 if (anotherWatchdogAlive()) {
   process.exit(0)
 }
+// ZCode 插件开关关闭 → 不常驻：清理 Startup 项并退出（零后台）。
+// 重新启用插件后，新会话 hook 会重写 vbs 并拉起本进程（自愈闭环）。
+if (!isZcodePluginEnabled()) {
+  log('zcode plugin disabled, cleaning up and exiting')
+  try {
+    fs.rmSync(startupVbsPath(), { force: true })
+  } catch {}
+  try {
+    fs.rmSync(LOCK_FILE, { force: true })
+  } catch {}
+  process.exit(0)
+}
 if (readConfig().enabled === false) {
   log('disabled by config, watchdog idle')
 }
@@ -93,8 +105,11 @@ log(`initial state: process = ${wasProcess}`)
 setInterval(() => {
   const proc = zcodeProcessRunning()
   if (proc && !wasProcess) {
-    if (readConfig().coverBoot === true) {
-      // 冷启动：进程诞生即播（握手揭幕），动画盖住 ZCode 白屏/加载期
+    // 冷启动：进程诞生即播（握手揭幕），动画盖住 ZCode 白屏/加载期。
+    // 播放前提：插件开关（ZCode 设置）开启 + 总开关开启 + 冷却通过
+    if (!isZcodePluginEnabled()) {
+      log('cold-start (process edge), zcode plugin disabled, skip')
+    } else if (readConfig().coverBoot === true) {
       tryPlay('cold-start (process edge)', true)
     } else {
       log('cold-start (process edge), coverBoot off, skip')
@@ -102,6 +117,20 @@ setInterval(() => {
   }
   wasProcess = proc
 }, POLL_MS)
+
+// 看门运行期自检：ZCode 插件开关被关 → 主动退场（清 vbs + 锁，零后台）
+setInterval(() => {
+  if (!isZcodePluginEnabled()) {
+    log('zcode plugin disabled during runtime, cleaning up and exiting')
+    try {
+      fs.rmSync(startupVbsPath(), { force: true })
+    } catch {}
+    try {
+      fs.rmSync(LOCK_FILE, { force: true })
+    } catch {}
+    process.exit(0)
+  }
+}, SELFCHECK_MS)
 
 // 卸载自检：源目录消失（source-marker 记录的插件目录被删）→ 清理 Startup 项与锁并退出
 setInterval(() => {
